@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "atproto-core",
+    "atproto-client",
+    "atproto-pds",
+]

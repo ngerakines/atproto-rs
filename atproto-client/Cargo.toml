@@ -1,0 +1,14 @@
+[package]
+name = "atproto-client"
+description = "atproto client library and tool"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nick Gerakines <nick.gerakines@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/ngerakines/atproto-rs"
+homepage = "https://github.com/ngerakines/atproto-rs"
+license = "MIT"
+publish = false
+keywords = ["atproto", "federation"]
+
+[dependencies]
