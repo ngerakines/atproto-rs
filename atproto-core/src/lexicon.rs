@@ -49,6 +49,7 @@ pub enum LexiconPrimitive {
     Number { description: Option<String> },
     Integer { description: Option<String> },
     String { description: Option<String> },
+    Array { description: Option<String> },
     // Ref { description: Option<String>, #[serde(rename(deserialize = "ref"))] ref_link: String },
 }
 
@@ -64,7 +65,7 @@ pub struct LexXrpcBody {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub struct LexXrpcParameters {
     pub description: Option<String>,
-    pub required: Vec<String>,
+    pub required: Option<Vec<String>>,
     pub properties: Option<HashMap<String, LexiconPrimitive>>,
 }
 
@@ -78,7 +79,7 @@ pub enum LexiconType {
         description: Option<String>,
         parameters: Option<LexXrpcParameters>,
         output: Option<LexXrpcBody>,
-        errors: Option<Vec<String>>,
+        // errors: Option<Vec<String>>,
     },
     Object {
         description: Option<String>,
@@ -90,6 +91,13 @@ pub enum LexiconType {
     Record {
         description: Option<String>,
     },
+    Subscription {
+        description: Option<String>,
+    },
+    Boolean { description: Option<String> },
+    Number { description: Option<String> },
+    Integer { description: Option<String> },
+    String { description: Option<String> },
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
