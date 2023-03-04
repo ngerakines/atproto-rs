@@ -1,18 +1,19 @@
 use async_trait::async_trait;
 use parking_lot::Mutex;
 use serde::{de, Deserialize, Serialize};
-use std::fmt;
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::fmt;
 use std::fs::File;
 use std::io::BufReader;
-use std::path::Path;
 use std::marker::PhantomData;
+use std::path::Path;
 
 use crate::error::{AtProtoError, Result};
 
 fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
-    where D: de::Deserializer<'de>
+where
+    D: de::Deserializer<'de>,
 {
     struct StringOrVec(PhantomData<Vec<String>>);
 
@@ -24,13 +25,15 @@ fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error
         }
 
         fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
-            where E: de::Error
+        where
+            E: de::Error,
         {
             Ok(vec![value.to_owned()])
         }
 
         fn visit_seq<S>(self, visitor: S) -> Result<Self::Value, S::Error>
-            where S: de::SeqAccess<'de>
+        where
+            S: de::SeqAccess<'de>,
         {
             de::Deserialize::deserialize(de::value::SeqAccessDeserializer::new(visitor))
         }
@@ -41,11 +44,11 @@ fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
-pub enum LexiconPrimitive  {
-    Boolean { description: Option<String>},
-    Number { description: Option<String>},
-    Integer { description: Option<String>},
-    String { description: Option<String>},
+pub enum LexiconPrimitive {
+    Boolean { description: Option<String> },
+    Number { description: Option<String> },
+    Integer { description: Option<String> },
+    String { description: Option<String> },
     // Ref { description: Option<String>, #[serde(rename(deserialize = "ref"))] ref_link: String },
 }
 
@@ -62,7 +65,7 @@ pub struct LexXrpcBody {
 pub struct LexXrpcParameters {
     pub description: Option<String>,
     pub required: Vec<String>,
-    pub properties: Option<HashMap<String, LexiconPrimitive>>
+    pub properties: Option<HashMap<String, LexiconPrimitive>>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
@@ -82,6 +85,9 @@ pub enum LexiconType {
         required: Option<Vec<String>>,
     },
     Procedure {
+        description: Option<String>,
+    },
+    Record {
         description: Option<String>,
     },
 }
@@ -239,37 +245,12 @@ mod tests {
             .into_iter()
             .filter_map(|e| e.ok())
         {
-            if entry.file_type().is_file() {
-                let lexicon = lexicon_from_file(entry.path()).expect("lexicon.json failed");
+            if entry.file_type().is_file() && entry.path().extension().unwrap() == "json" {
+                let lexicon = lexicon_from_file(entry.path())
+                    .expect(format!("parse failed failed: {:?}", entry.path()).as_str());
                 assert!(lexicon.validate().is_ok());
             }
         }
-
-        // let lexicon = lexicon_from_file(test_data_dir.join("lexicon_query.json"))
-        //     .expect("lexicon.json failed");
-        // assert!(lexicon.validate().is_ok());
-        // assert_eq!(lexicon.lexicon, 1);
-        // assert_eq!(lexicon.id, "com.atproto.handle.resolve");
-
-        // assert_eq!(
-        //     lexicon.defs,
-        //     HashMap::from([(
-        //         "main".to_string(),
-        //         LexiconType::Query {
-        //             description: Some("Provides the DID of a repo.".to_string()),
-        //             parameters: Some(
-        //                 HashMap::from([("handle".to_string(), LexiconPrimitive::String {
-        //                     description: Some("The handle to resolve. If not supplied, will resolve the host's own handle.".to_string())
-        //                 })])
-        //             ),
-        //             output: Some(LexXrpcBody {
-        //                 description: None,
-        //                 encoding: vec!["application/json".to_string()],
-        //             }),
-        //             errors: None,
-        //         }
-        //     )])
-        // );
     }
 
     // #[test]

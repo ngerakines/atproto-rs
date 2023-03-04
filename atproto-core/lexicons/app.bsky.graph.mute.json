@@ -1,17 +1,17 @@
 {
   "lexicon": 1,
-  "id": "com.atproto.account.requestPasswordReset",
+  "id": "app.bsky.graph.mute",
   "defs": {
     "main": {
       "type": "procedure",
-      "description": "Initiate a user account password reset via email.",
+      "description": "Mute an actor by did or handle.",
       "input": {
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["email"],
+          "required": ["user"],
           "properties": {
-            "email": { "type": "string" }
+            "user": { "type": "string" }
           }
         }
       }
