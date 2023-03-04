@@ -42,7 +42,6 @@ where
     deserializer.deserialize_any(StringOrVec(PhantomData))
 }
 
-
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
 pub struct LexiconBoolean {
@@ -239,29 +238,53 @@ pub struct LexiconObject {
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconQuery {
+    description: Option<String>,
+    parameters: Option<LexXrpcParameters>,
+    output: Option<LexXrpcBody>,
+    errors: Option<Vec<LexXrpcError>>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconProcedure {
+    description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconRecord {
+    description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconSubscription {
+    description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum LexiconType {
     Token(LexiconToken),
-    Query {
-        description: Option<String>,
-        parameters: Option<LexXrpcParameters>,
-        output: Option<LexXrpcBody>,
-        errors: Option<Vec<LexXrpcError>>,
-    },
+    Query(LexiconQuery),
     Object(LexiconObject),
-    Procedure {
-        description: Option<String>,
-    },
-    Record {
-        description: Option<String>,
-    },
-    Subscription {
-        description: Option<String>,
-    },
-    Boolean{ description: Option<String> },
-    Number { description: Option<String> },
-    Integer { description: Option<String> },
-    String { description: Option<String> },
+    Procedure(LexiconProcedure),
+    Record(LexiconRecord),
+    Subscription(LexiconSubscription),
+    Boolean(LexiconBoolean),
+    Number(LexiconNumber),
+    Integer(LexiconInteger),
+    String(LexiconString),
+    Datetime(LexiconDateTime),
+    Unknown(LexiconUnknown),
+    Ref(LexiconRef),
+    Union(LexiconRefUnion),
+    Array(LexiconArray),
+    Audio(LexiconAudio),
+    Video(LexiconVideo),
+    Image(LexiconImage),
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
@@ -401,11 +424,9 @@ mod tests {
             lexicon.defs,
             HashMap::from([(
                 "main".to_string(),
-                LexiconType::Token(
-                    LexiconToken {
-                        description: Some("Actor type of 'User'".to_string())
-                    }
-                )
+                LexiconType::Token(LexiconToken {
+                    description: Some("Actor type of 'User'".to_string())
+                })
             )])
         );
     }
