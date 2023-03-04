@@ -1,6 +1,6 @@
 //! Lexicon is a collection of definitions of all the types and objects used in the protocol.
 //! It is used to generate the code for the protocol.
-//! 
+//!
 //! Most of this code was derived from the https://github.com/bluesky-social/atproto/blob/main/packages/lexicon/src/types.ts
 use async_trait::async_trait;
 use parking_lot::Mutex;
@@ -370,7 +370,7 @@ pub fn lexicon_from_file<P: AsRef<Path>>(path: P) -> Result<LexiconDoc, AtProtoE
     let file = File::open(path)?;
     let reader = BufReader::new(file);
     let lexicon: LexiconDoc = serde_json::from_reader(reader)?;
-    //   lexicon.validate()?;
+    lexicon.validate()?;
     Ok(lexicon)
 }
 
@@ -401,18 +401,6 @@ mod tests {
 
         assert_eq!(lexicon, lexicon2.unwrap());
     }
-
-    // #[test]
-    // fn lexicon_doc_validate() {
-    //   let mut test_data_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    //   test_data_dir.push("testdata");
-
-    //   let lexicon = lexicon_from_file(test_data_dir.join("lexicon.json")).expect("lexicon.json failed");
-    //   assert!(lexicon.validate().is_ok());
-    //   assert_eq!(lexicon.lexicon, 1);
-    //   assert_eq!(lexicon.id, "com.atproto.account.create");
-    //   assert_eq!(lexicon.defs, HashMap::new());
-    // }
 
     #[test]
     fn lexicon_parse_token() {
