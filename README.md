@@ -10,7 +10,7 @@ Commits that were influenced by GitHub Copilot will have the `[copilot]` tag app
 
 # Roadmap
 
-* [ ] Lexicon parse and verify
+* [X] Lexicon parse and verify
 * [ ] Validate lexicon requests and response payloads
 * [ ] Client skeleton
 * [ ] PDS skeleton

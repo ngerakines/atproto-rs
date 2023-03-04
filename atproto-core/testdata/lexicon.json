@@ -1,0 +1,46 @@
+{
+    "lexicon": 1,
+    "id": "com.atproto.account.create",
+    "defs": {
+      "main": {
+        "type": "procedure",
+        "description": "Create an account.",
+        "input": {
+          "encoding": "application/json",
+          "schema": "#inputSchema"
+        },
+        "output": {
+          "encoding": "application/json",
+          "schema": "#outputSchema"
+        },
+        "errors": [
+          {"name": "InvalidHandle"},
+          {"name": "InvalidPassword"},
+          {"name": "InvalidInviteCode"},
+          {"name": "HandleNotAvailable"}
+        ]
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["handle", "email", "password"],
+        "properties": {
+          "email": {"type": "string"},
+          "handle": {"type": "string"},
+          "inviteCode": {"type": "string"},
+          "password": {"type": "string"},
+          "recoveryKey": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "required": ["accessJwt", "refreshJwt", "handle", "did", "declarationCid"],
+        "properties": {
+          "accessJwt": { "type": "string" },
+          "refreshJwt": { "type": "string" },
+          "handle": { "type": "string" },
+          "did": { "type": "string" },
+          "declarationCid": { "type": "string" }
+        }
+      }
+    }
+  }
