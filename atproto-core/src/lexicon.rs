@@ -42,19 +42,119 @@ where
     deserializer.deserialize_any(StringOrVec(PhantomData))
 }
 
+
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
-#[serde(tag = "type", rename_all = "snake_case")]
-pub enum LexiconPrimitive {
-    Boolean { description: Option<String> },
-    Number { description: Option<String> },
-    Integer { description: Option<String> },
-    String { description: Option<String> },
-    Array { description: Option<String> },
-    // Ref { description: Option<String>, #[serde(rename(deserialize = "ref"))] ref_link: String },
+#[serde(rename_all = "snake_case")]
+pub struct LexiconBoolean {
+    pub description: Option<String>,
+    pub default: Option<bool>,
+    #[serde(rename(deserialize = "const"))]
+    pub const_value: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconNumber {
+    pub description: Option<String>,
+    pub default: Option<u32>,
+    pub minimum: Option<u32>,
+    pub maximum: Option<u32>,
+    #[serde(rename(deserialize = "enum"))]
+    pub enum_value: Option<Vec<u32>>,
+    #[serde(rename(deserialize = "const"))]
+    pub const_value: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconInteger {
+    pub description: Option<String>,
+    pub default: Option<u32>,
+    pub minimum: Option<u32>,
+    pub maximum: Option<u32>,
+    #[serde(rename(deserialize = "enum"))]
+    pub enum_value: Option<Vec<u32>>,
+    #[serde(rename(deserialize = "const"))]
+    pub const_value: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconString {
+    pub description: Option<String>,
+    pub default: Option<String>,
+    pub min_length: Option<String>,
+    pub max_length: Option<String>,
+    #[serde(rename(deserialize = "enum"))]
+    pub enum_value: Option<Vec<String>>,
+    #[serde(rename(deserialize = "const"))]
+    pub const_value: Option<String>,
+    pub known_values: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconDateTime {
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconUnknown {
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
+pub enum LexiconPrimitive {
+    Boolean(LexiconBoolean),
+    Number(LexiconNumber),
+    Integer(LexiconInteger),
+    String(LexiconString),
+    DateTime(LexiconDateTime),
+    Unknown(LexiconUnknown),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconRef {
+    pub description: Option<String>,
+    #[serde(rename(deserialize = "ref"))]
+    pub ref_value: String,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconRefUnion {
+    pub description: Option<String>,
+    pub refs: Vec<String>,
+    pub closed: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum LexiconArrayItem {
+    Boolean(LexiconBoolean),
+    Number(LexiconNumber),
+    Integer(LexiconInteger),
+    String(LexiconString),
+    DateTime(LexiconDateTime),
+    Unknown(LexiconUnknown),
+    Ref(LexiconRef),
+    Union(LexiconRefUnion),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconArray {
+    pub description: Option<String>,
+    pub items: LexiconArrayItem,
+    pub min_length: Option<u32>,
+    pub max_length: Option<u32>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
 pub struct LexXrpcBody {
     pub description: Option<String>,
     #[serde(deserialize_with = "string_or_seq_string")]
@@ -63,28 +163,92 @@ pub struct LexXrpcBody {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
+pub enum LexXrpcParametersItem {
+    Boolean(LexiconBoolean),
+    Number(LexiconNumber),
+    Integer(LexiconInteger),
+    String(LexiconString),
+    DateTime(LexiconDateTime),
+    Unknown(LexiconUnknown),
+    Array(LexiconArray),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
 pub struct LexXrpcParameters {
     pub description: Option<String>,
     pub required: Option<Vec<String>>,
-    pub properties: Option<HashMap<String, LexiconPrimitive>>,
+    pub properties: Option<HashMap<String, LexXrpcParametersItem>>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexXrpcError {
+    pub description: Option<String>,
+    pub name: String,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconToken {
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconImage {
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconVideo {
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconAudio {
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum LexiconObjectPropertyItem {
+    Boolean(LexiconBoolean),
+    Number(LexiconNumber),
+    Integer(LexiconInteger),
+    String(LexiconString),
+    Datetime(LexiconDateTime),
+    Unknown(LexiconUnknown),
+    Ref(LexiconRef),
+    Union(LexiconRefUnion),
+    Array(LexiconArray),
+    Audio(LexiconAudio),
+    Video(LexiconVideo),
+    Image(LexiconImage),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub struct LexiconObject {
+    pub description: Option<String>,
+    pub required: Option<Vec<String>>,
+    pub nullable: Option<Vec<String>>,
+    pub properties: Option<HashMap<String, LexiconObjectPropertyItem>>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum LexiconType {
-    Token {
-        description: Option<String>,
-    },
+    Token(LexiconToken),
     Query {
         description: Option<String>,
         parameters: Option<LexXrpcParameters>,
         output: Option<LexXrpcBody>,
-        // errors: Option<Vec<String>>,
+        errors: Option<Vec<LexXrpcError>>,
     },
-    Object {
-        description: Option<String>,
-        required: Option<Vec<String>>,
-    },
+    Object(LexiconObject),
     Procedure {
         description: Option<String>,
     },
@@ -94,7 +258,7 @@ pub enum LexiconType {
     Subscription {
         description: Option<String>,
     },
-    Boolean { description: Option<String> },
+    Boolean{ description: Option<String> },
     Number { description: Option<String> },
     Integer { description: Option<String> },
     String { description: Option<String> },
@@ -237,9 +401,11 @@ mod tests {
             lexicon.defs,
             HashMap::from([(
                 "main".to_string(),
-                LexiconType::Token {
-                    description: Some("Actor type of 'User'".to_string())
-                }
+                LexiconType::Token(
+                    LexiconToken {
+                        description: Some("Actor type of 'User'".to_string())
+                    }
+                )
             )])
         );
     }
