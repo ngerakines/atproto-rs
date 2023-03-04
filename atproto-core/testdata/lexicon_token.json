@@ -1,0 +1,10 @@
+{
+    "lexicon": 1,
+    "id": "com.socialapp.actorUser",
+    "defs": {
+      "main": {
+        "type": "token",
+        "description": "Actor type of 'User'"
+      }
+    }
+  }
