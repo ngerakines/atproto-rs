@@ -1,3 +1,7 @@
+//! Lexicon is a collection of definitions of all the types and objects used in the protocol.
+//! It is used to generate the code for the protocol.
+//! 
+//! Most of this code was derived from the https://github.com/bluesky-social/atproto/blob/main/packages/lexicon/src/types.ts
 use async_trait::async_trait;
 use parking_lot::Mutex;
 use serde::{de, Deserialize, Serialize};
