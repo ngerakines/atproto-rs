@@ -19,6 +19,16 @@ parking_lot = "0.12"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 tokio = { version = "1", features = ["full"] }
+rfc6979 = "0.4.0"
+ed25519 = "2.2.0"
+ecdsa = "0.16.0"
+dsa = "0.6.0"
+k256 = "0.13.0"
+p256 = "0.13.0"
+rand_core = "0.6.4"
 
 [dev-dependencies]
 walkdir = "2"
+
+[[bin]]
+name = "keys"
