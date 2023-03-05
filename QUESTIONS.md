@@ -93,4 +93,4 @@ The following DID would exist for that handle:
 }
 ```
 
-Upon registration, the PDC would generate `did:plc:nkr2hgvpx6ea6mwz1r90jg3h#signingKey` (private key `zErU6WGWMrrMHXGajd8RJ2476Z7pQr2prHgJS9vTpu2gF`), but user would provide `did:plc:nkr2hgvpx6ea6mwz1r90jg3h#recoveryKey` (`zA9YZhbzUXSZWpFK11QEpa7HRxnGjvHqDJRhYpDX5iGi1`) as a means to recover their content and migrate should they need to.
+Upon registration, the PDS would generate `did:plc:nkr2hgvpx6ea6mwz1r90jg3h#signingKey` (private key `zErU6WGWMrrMHXGajd8RJ2476Z7pQr2prHgJS9vTpu2gF`), but user would provide `did:plc:nkr2hgvpx6ea6mwz1r90jg3h#recoveryKey` (`zA9YZhbzUXSZWpFK11QEpa7HRxnGjvHqDJRhYpDX5iGi1`) as a means to recover their content and migrate should they need to.
