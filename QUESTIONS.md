@@ -65,7 +65,7 @@ The following DID would exist for that handle:
     'https://w3id.org/security/suites/ecdsa-2019/v1'
   ],
   id: 'did:plc:nkr2hgvpx6ea6mwz1r90jg3h',
-  alsoKnownAs: [ 'https://nick.cauda.cloud' ],
+  alsoKnownAs: [],
   verificationMethod: [
     {
       id: 'did:plc:nkr2hgvpx6ea6mwz1r90jg3h#signingKey',
