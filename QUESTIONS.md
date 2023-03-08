@@ -2,6 +2,22 @@
 
 This is me just trying to figure stuff out.
 
+# PDS Exists
+
+In this scenario, a PDS exists at `https://cauda.cloud`.
+
+The PDS will have one more more keys that it uses. At least one of these keys is provided for public key verification of signatures. Some of these keys may be "offline" keys for recovery purposes.
+
+Implications:
+
+* The server can/should support multiple signing keys
+* The server should support requests to `GET /.well-known/jwks.json`
+* The server should support request to `GET /.well-known/did-configuration.json`
+
+Looks like there are conflicting specs:
+* https://identity.foundation/specs/did-configuration/
+* https://identity.foundation/.well-known/resources/did-configuration/
+
 # User Exists On PDS
 
 In this scenario, a PDS exists at `https://cauda.cloud`.
@@ -14,7 +30,6 @@ Note: This command was used: `tr -dc a-z0-9 </dev/urandom | head -c 24 ; echo ''
 
 The following identifiers are all valid for the user:
 
-* `@nick.cauda.cloud`
 * `at://nick.cauda.cloud`
 * `https://nick.cauda.cloud`
 * `at://did:plc:nkr2hgvpx6ea6mwz1r90jg3h`
@@ -25,9 +40,7 @@ The user can be resolved by making requests to the PDS:
   * Where X is one of `cauda.cloud` or `nick.cauda.cloud`
   * Where Y is one of
     * `nick`
-    * `@nick`
     * `nick.cauda.cloud`
-    * `@nick.cauda.cloud`
     * `did:plc:nkr2hgvpx6ea6mwz1r90jg3h`
 
 With the following python script:
@@ -47,11 +60,9 @@ if __name__ == "__main__":
     assert new_vk.verify(signature, b"message")
 ```
 
-Running twice and producing the ouput:
+Running that producing the ouput:
 
 ```
-private=zErU6WGWMrrMHXGajd8RJ2476Z7pQr2prHgJS9vTpu2gF
-public=z4avJnZDnCJVZh9mNGT59LNLYp3yuVxFHe7RjmZpRWBAgkH3dHjGuUX3utaVnUpX9reeFEcumjr9cW7Fiw9VfMmZH
 private=zA9YZhbzUXSZWpFK11QEpa7HRxnGjvHqDJRhYpDX5iGi1
 public=z2yPtDdRZ79K9Tp6WtCxkhhME4QVdnMXtzY9hvaVApAgtbcpBDK8X6P5dEPchkZyTkyjNmyJdMSZvmqViXRzfvk3H
 ```
