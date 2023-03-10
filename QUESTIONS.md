@@ -2,6 +2,12 @@
 
 This is me just trying to figure stuff out.
 
+# Handle Exists
+
+A handle may exist, but it must support some set of resolution methods.
+
+For example, `nick.cauda.cloud` would exist at `https://nick.cauda.cloud/`. The DID would be resolved through an XRPC request (not `.well-known/did.json`) and would reference the PDS serving the handle.
+
 # PDS Exists
 
 In this scenario, a PDS exists at `https://cauda.cloud`.
@@ -10,13 +16,8 @@ The PDS will have one more more keys that it uses. At least one of these keys is
 
 Implications:
 
-* The server can/should support multiple signing keys
+* The server should support multiple signing keys
 * The server should support requests to `GET /.well-known/jwks.json`
-* The server should support request to `GET /.well-known/did-configuration.json`
-
-Looks like there are conflicting specs:
-* https://identity.foundation/specs/did-configuration/
-* https://identity.foundation/.well-known/resources/did-configuration/
 
 # User Exists On PDS
 
@@ -30,6 +31,7 @@ Note: This command was used: `tr -dc a-z0-9 </dev/urandom | head -c 24 ; echo ''
 
 The following identifiers are all valid for the user:
 
+* `nick.cauda.cloud`
 * `at://nick.cauda.cloud`
 * `https://nick.cauda.cloud`
 * `at://did:plc:nkr2hgvpx6ea6mwz1r90jg3h`

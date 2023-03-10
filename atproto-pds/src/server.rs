@@ -51,12 +51,20 @@ async fn handle_check_ready(State(state): State<AppState>) -> impl IntoResponse 
     Json(json!({"version": state.config.version}))
 }
 
+async fn handle_well_known_jwks(State(state): State<AppState>) -> impl IntoResponse {
+    let jwks = jsonwebtoken::jwk::JwkSet{ keys: state.config.signing_keys.clone() };
+    Json(jwks)
+}
+
 pub(crate) fn build_router(shared_state: AppState) -> Router {
     Router::new()
         .route("/", get(handle_index))
         .route("/check/startup", get(handle_check_started))
         .route("/check/liveliness", get(handle_check_alive))
         .route("/check/readiness", get(handle_check_ready))
+
+        .route("/.well-known/jwks.json", get(handle_well_known_jwks))
+
         .layer(TraceLayer::new_for_http())
         .with_state(shared_state)
 }

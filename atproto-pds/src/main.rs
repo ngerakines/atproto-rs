@@ -1,3 +1,5 @@
+use anyhow::anyhow;
+use atproto_core::jwk::jwks_from;
 use tracing::warn;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -8,7 +10,7 @@ mod server;
 mod state;
 mod util;
 
-use atproto_core::error::Result;
+use atproto_core::error::{Result, AtProtoError};
 
 use crate::config::ServerConfig;
 use crate::server::cmd_server;
@@ -30,11 +32,14 @@ enum Commands {
 
         #[arg(short, env = "ADDRESS", default_value = "0.0.0.0")]
         address: String,
+
+        #[arg(short, env = "SIGNING_KEYS", use_value_delimiter = true, value_delimiter = ',')]
+        signing_keys: Vec<String>,
     },
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), AtProtoError> {
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new(
             std::env::var("RUST_LOG")
@@ -53,11 +58,18 @@ async fn main() -> Result<()> {
     let args = Cli::parse();
 
     match args.command {
-        Commands::Server { port, address } => {
+        Commands::Server { port, address, signing_keys } => {
+            println!("signing_keys {:?}", signing_keys);
+            let jwks = jwks_from(signing_keys).unwrap_or(vec![]);
+            if jwks.is_empty() {
+                return Err(AtProtoError{ err: anyhow!("at least one signing key must be provided")});
+            }
+
             let server_config = ServerConfig {
                 version,
                 port,
                 address,
+                signing_keys: jwks.clone(),
             };
             cmd_server(server_config).await?;
         }

@@ -33,3 +33,4 @@ tower = { version = "0.4" }
 tower-http = { version = "0.4", features = ["trace"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+jsonwebtoken = "8"

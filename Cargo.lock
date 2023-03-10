@@ -116,6 +116,7 @@ dependencies = [
  "clap",
  "futures",
  "futures-util",
+ "jsonwebtoken",
  "parking_lot",
  "rand",
  "serde",

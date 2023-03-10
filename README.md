@@ -1,5 +1,7 @@
 # atproto-rs
 
+**Don't use this, yet.**
+
 A suite of libraries, tools, and daemons for atproto.
 
 # Disclosures
