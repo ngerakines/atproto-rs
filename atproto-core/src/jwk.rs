@@ -1,7 +1,6 @@
-use std::{path::Path, fs::File, io::BufReader};
-use jsonwebtoken::jwk::Jwk;
 use crate::error::AtProtoError;
-
+use jsonwebtoken::jwk::Jwk;
+use std::{fs::File, io::BufReader, path::Path};
 
 pub fn jwk_from_file<P: AsRef<Path>>(path: P) -> Result<Jwk, AtProtoError> {
     let file = File::open(path)?;

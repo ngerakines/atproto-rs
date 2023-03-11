@@ -8,9 +8,10 @@ use clap::{Parser, Subcommand};
 mod config;
 mod server;
 mod state;
+mod storage;
 mod util;
 
-use atproto_core::error::{Result, AtProtoError};
+use atproto_core::error::{AtProtoError, Result};
 
 use crate::config::ServerConfig;
 use crate::server::cmd_server;
@@ -33,8 +34,24 @@ enum Commands {
         #[arg(short, env = "ADDRESS", default_value = "0.0.0.0")]
         address: String,
 
-        #[arg(short, env = "SIGNING_KEYS", use_value_delimiter = true, value_delimiter = ',')]
+        #[arg(
+            short,
+            env = "SIGNING_KEYS",
+            use_value_delimiter = true,
+            value_delimiter = ',',
+            help = "One or more comma separated values of file paths to signing keys."
+        )]
         signing_keys: Vec<String>,
+
+        #[arg(
+            short,
+            env = "DEFAULT_SIGNING_KEY",
+            help = "The KID of a signing key to be used as the default signing key."
+        )]
+        default_signing_key: Option<String>,
+
+        #[arg(short, env = "HANDLE_MANAGER", default_value = "memory")]
+        handle_manager_type: String,
     },
 }
 
@@ -58,11 +75,38 @@ async fn main() -> Result<(), AtProtoError> {
     let args = Cli::parse();
 
     match args.command {
-        Commands::Server { port, address, signing_keys } => {
+        Commands::Server {
+            port,
+            address,
+            signing_keys,
+            default_signing_key,
+            handle_manager_type,
+        } => {
             println!("signing_keys {:?}", signing_keys);
             let jwks = jwks_from(signing_keys).unwrap_or(vec![]);
             if jwks.is_empty() {
-                return Err(AtProtoError{ err: anyhow!("at least one signing key must be provided")});
+                return Err(AtProtoError {
+                    err: anyhow!("at least one signing key must be provided"),
+                });
+            }
+
+            let actual_default_signing_key: Result<jsonwebtoken::jwk::Jwk, AtProtoError> =
+                match default_signing_key {
+                    None => Ok(jwks[0].clone()),
+                    Some(default_signing_key_kid) => {
+                        let found_signing_key = jwks
+                            .iter()
+                            .find(|jwk| jwk.common.key_id == Some(default_signing_key_kid.clone()));
+                        if found_signing_key.is_none() {
+                            return Err(AtProtoError {
+                                err: anyhow!("at least one signing key must be provided"),
+                            });
+                        }
+                        Ok(found_signing_key.unwrap().clone())
+                    }
+                };
+            if actual_default_signing_key.is_err() {
+                return Err(actual_default_signing_key.err().unwrap());
             }
 
             let server_config = ServerConfig {
@@ -70,6 +114,8 @@ async fn main() -> Result<(), AtProtoError> {
                 port,
                 address,
                 signing_keys: jwks.clone(),
+                default_signing_key: actual_default_signing_key.unwrap(),
+                handle_manager_type: handle_manager_type,
             };
             cmd_server(server_config).await?;
         }
