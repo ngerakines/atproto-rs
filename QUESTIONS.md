@@ -177,3 +177,33 @@ The following DID would exist for that handle:
   ]
 }
 ```
+
+# User Discovery (HTTPS)
+
+In this scenario, a PDS exists at `https://cauda.cloud`.
+
+The user `nick.cauda.cloud` references `@mattie.town` in a post. The server has never encountered that user before, so it begins the user discovery process to reference the user and link to the accordingly.
+
+The `cauda.cloud` PDS first does the `com.atproto.handle.resolve` XPRC call as `GET https://mattie.town/xrpc/com.atproto.handle.resolve?handle=mattie.town`.
+
+That returns a DID in the payload `{"did": "did:plc:0f34f940fbc17763c5bc8e90"}`.
+
+The server then queries plc.directory to get the full DID for the user and learn where their PDS is as `GET https://plc.directory/did:plc:0f34f940fbc17763c5bc8e90`.
+
+At that point, the `AtprotoPersonalDataServer` is listed and available for `https://cauda.cloud` to interact with.
+
+# User Discovery (DNS)
+
+In this scenario, a PDS exists at `https://cauda.cloud`.
+
+The user `nick.cauda.cloud` references `@mattie.town` in a post. The server has never encountered that user before, so it begins the user discovery process to reference the user and link to the accordingly.
+
+The `cauda.cloud` PDS first does the `com.atproto.handle.resolve` XPRC call as `GET https://mattie.town/xrpc/com.atproto.handle.resolve?handle=mattie.town`.
+
+That HTTPS request returns a response that is not a `200 OK`.
+
+The `cauda.cloud` PDS then performs a DNS lookup against `_atproto.mattie.town`. The response is a TXT record with the payload `"did:plc:0f34f940fbc17763c5bc8e90"`.
+
+The server then queries plc.directory to get the full DID for the user and learn where their PDS is as `GET https://plc.directory/did:plc:0f34f940fbc17763c5bc8e90`.
+
+At that point, the `AtprotoPersonalDataServer` is listed and available for `https://cauda.cloud` to interact with.
