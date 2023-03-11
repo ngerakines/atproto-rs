@@ -2,12 +2,6 @@
 
 This is me just trying to figure stuff out.
 
-# Handle Exists
-
-A handle may exist, but it must support some set of resolution methods.
-
-For example, `nick.cauda.cloud` would exist at `https://nick.cauda.cloud/`. The DID would be resolved through an XRPC request (not `.well-known/did.json`) and would reference the PDS serving the handle.
-
 # PDS Exists
 
 In this scenario, a PDS exists at `https://cauda.cloud`.
@@ -22,6 +16,11 @@ Implications:
 # User creation
 
 In this scenario, a PDS exists at `https://cauda.cloud`.
+
+It has two keys: online/active and offline
+
+* z2dDWH6M6TMUy7Yxhh3XrUgZm1PdbGUnEVTkpyvj1LSMPSXaq1YFV2HRBVP98LPc1gtVPe8mhu1MRHTJc3UBZUoMP
+* z5FBMN38eEgdgX11ejXNn2KaZCx2ZCicJJLYLb8gdQqHpzaa4PuTpZDqyfxZc5dbyVNDAnLbLHuwyNxEkaeVtbWZU
 
 A user wants to create an account, `nick.cauda.cloud`. First they generate a recovery key:
 
@@ -75,12 +74,12 @@ Internally, the PDS creates a create operation:
     "at://nick.cauda.cloud"
   ],
   "rotationKeys": [
-    "did:key:_pds_signing_key_active",
-    "did:key:_pds_signing_key_offline",
-    "did:key:_user_recovery_key"
+    "did:key:z2dDWH6M6TMUy7Yxhh3XrUgZm1PdbGUnEVTkpyvj1LSMPSXaq1YFV2HRBVP98LPc1gtVPe8mhu1MRHTJc3UBZUoMP",
+    "did:key:z5FBMN38eEgdgX11ejXNn2KaZCx2ZCicJJLYLb8gdQqHpzaa4PuTpZDqyfxZc5dbyVNDAnLbLHuwyNxEkaeVtbWZU",
+    "did:key:z2ZaygJJjGTMRYZDyHqLZwv7qneUDwu99X11JQ7DK8Z4ma28Ux9zFcW3qpMengmmxicBfMpqoDCu33EFiTPpxVb9y"
   ],
   "verificationMethods": {
-    "atproto": "did:key:_pds_signing_key_active"
+    "active-kid-1678556449": "did:key:z2dDWH6M6TMUy7Yxhh3XrUgZm1PdbGUnEVTkpyvj1LSMPSXaq1YFV2HRBVP98LPc1gtVPe8mhu1MRHTJc3UBZUoMP"
   }
 }
 ```
@@ -101,7 +100,7 @@ if __name__ == "__main__":
     print(encoded_digest[:min(len(encoded_digest), 24)].lower())
 ```
 
-The resulting did for the user is `did:plc:dpthpm5cw3f6vc5qbcmcfjc7`.
+The resulting did for the user is `did:plc:rmi5khsuhsgktvxt6etk7ish`.
 
 The create operation is also signed and made available as a public log of operations.
 
@@ -112,7 +111,7 @@ The following identifiers are all valid for the user:
 * `nick.cauda.cloud`
 * `at://nick.cauda.cloud`
 * `https://nick.cauda.cloud`
-* `at://did:plc:dpthpm5cw3f6vc5qbcmcfjc7`
+* `at://did:plc:rmi5khsuhsgktvxt6etk7ish`
 
 The user can be resolved by making requests to the PDS:
 
@@ -121,7 +120,7 @@ The user can be resolved by making requests to the PDS:
   * Where Y is one of
     * `nick`
     * `nick.cauda.cloud`
-    * `did:plc:dpthpm5cw3f6vc5qbcmcfjc7`
+    * `did:plc:rmi5khsuhsgktvxt6etk7ish`
 
 The following DID would exist for that handle:
 
@@ -131,7 +130,7 @@ The following DID would exist for that handle:
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/suites/secp256k1-2019/v1"
   ],
-  "id": "did:plc:dpthpm5cw3f6vc5qbcmcfjc7",
+  "id": "did:plc:rmi5khsuhsgktvxt6etk7ish",
   "alsoKnownAs": [
     "at://ngerakines.me"
   ],
@@ -139,19 +138,19 @@ The following DID would exist for that handle:
     {
       "id": "#active-kid-1678556449",
       "type": "EcdsaSecp256k1VerificationKey2019",
-      "controller": "did:plc:dpthpm5cw3f6vc5qbcmcfjc7",
-      "publicKeyMultibase": "_pds_signing_key_active"
+      "controller": "did:plc:rmi5khsuhsgktvxt6etk7ish",
+      "publicKeyMultibase": "did:key:z2dDWH6M6TMUy7Yxhh3XrUgZm1PdbGUnEVTkpyvj1LSMPSXaq1YFV2HRBVP98LPc1gtVPe8mhu1MRHTJc3UBZUoMP"
     },
     {
       "id": "#offline-kid-1678556449",
       "type": "EcdsaSecp256k1VerificationKey2019",
-      "controller": "did:plc:dpthpm5cw3f6vc5qbcmcfjc7",
-      "publicKeyMultibase": "_pds_signing_key_offline"
+      "controller": "did:plc:rmi5khsuhsgktvxt6etk7ish",
+      "publicKeyMultibase": "z5FBMN38eEgdgX11ejXNn2KaZCx2ZCicJJLYLb8gdQqHpzaa4PuTpZDqyfxZc5dbyVNDAnLbLHuwyNxEkaeVtbWZU"
     },
     {
       "id": "#user-kid-1678556449",
       "type": "EcdsaSecp256k1VerificationKey2019",
-      "controller": "did:plc:dpthpm5cw3f6vc5qbcmcfjc7",
+      "controller": "did:plc:rmi5khsuhsgktvxt6etk7ish",
       "publicKeyMultibase": "z2ZaygJJjGTMRYZDyHqLZwv7qneUDwu99X11JQ7DK8Z4ma28Ux9zFcW3qpMengmmxicBfMpqoDCu33EFiTPpxVb9y"
     }
   ],
@@ -173,7 +172,7 @@ The following DID would exist for that handle:
     {
       "id": "#atproto_pds",
       "type": "AtprotoPersonalDataServer",
-      "serviceEndpoint": "https://bsky.social"
+      "serviceEndpoint": "https://cauda.cloud"
     }
   ]
 }
