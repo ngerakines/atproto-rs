@@ -28,7 +28,7 @@ k256 = "0.13.0"
 p256 = "0.13.0"
 rand_core = "0.6.4"
 hex = "0.4.3"
-chrono = "0.4.23"
+chrono = "0.4.24"
 
 [dev-dependencies]
 walkdir = "2"
