@@ -2,27 +2,33 @@ use std::ops::Deref;
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 
-use crate::config::ServerConfig;
+use crate::configuration::Configuration;
 use crate::storage::handle::HandleManager;
 
 #[derive(Clone)]
-pub(crate) struct AppState(pub Arc<InnerState>);
+pub(crate) struct Context(pub Arc<InnerContext>);
 
-pub(crate) struct InnerState {
-    pub(crate) config: ServerConfig,
+pub(crate) struct InnerContext {
+    pub(crate) version: String,
+    pub(crate) configuration: Configuration,
     pub(crate) ready: AtomicBool,
     pub(crate) alive: AtomicBool,
     pub(crate) started: AtomicBool,
     pub(crate) handle_manager: Box<dyn HandleManager>,
 }
 
-impl InnerState {
-    pub fn new(config: ServerConfig, handle_manager: Box<dyn HandleManager>) -> Self {
+impl InnerContext {
+    pub fn new(
+        version: String,
+        configuration: Configuration,
+        handle_manager: Box<dyn HandleManager>,
+    ) -> Self {
         let ready = AtomicBool::new(false);
         let alive = AtomicBool::new(false);
         let started = AtomicBool::new(false);
         Self {
-            config,
+            version,
+            configuration,
             ready,
             alive,
             started,
@@ -31,15 +37,15 @@ impl InnerState {
     }
 }
 
-impl Deref for AppState {
-    type Target = InnerState;
+impl Deref for Context {
+    type Target = InnerContext;
 
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl AppState {
+impl Context {
     pub fn set_ready(&self) {
         self.ready.store(true, std::sync::atomic::Ordering::Relaxed);
     }

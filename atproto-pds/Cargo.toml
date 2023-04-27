@@ -14,24 +14,28 @@ build = "build.rs"
 
 [dependencies]
 atproto-core = { path = "../atproto-core" }
-clap = { version = "4.1.8", features = ["derive", "env"] }
-anyhow = { version = "1.0.66", features = ["backtrace"] }
+
+anyhow = { version = "1.0.70", features = ["backtrace"] }
 async-trait = {version = "0.1"}
 axum = "0.6.7"
-axum-server = {version = "0.4.6", features = ["tls-rustls"]}
+axum-server = {version = "0.4.7", features = ["tls-rustls"]}
+chrono = "0.4.24"
+config = "0.13.3"
+
 backoff = "0.4.0"
-chrono = {version = "0.4.23",  default-features = false, features = ["clock"]}
+
 futures-util = "0.3.17"
 futures = "0.3.26"
 parking_lot = "0.12"
 rand = "0.8"
-serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1.0.89" }
-tokio = { version = "1", features = ["full"] }
 tokio-tasker = "1.2.0"
-tower = { version = "0.4" }
-tower-http = { version = "0.4", features = ["trace"] }
-tracing = { version = "0.1", features = ["log"] }
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 jsonwebtoken = "8"
 rust-argon2 = "1.0"
+serde = {version = "1.0.160", features = ["derive"]}
+serde_json = "1.0.96"
+serde_yaml = "0.9.21"
+tokio = { version = "1", features = ["full"] }
+tower = { version = "0.4" }
+tower-http = { version = "0.4", features = ["trace"] }
+tracing = { version = "0.1.37", features = ["log"] }
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }

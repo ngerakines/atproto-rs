@@ -1,9 +1,8 @@
+use anyhow::Result;
 use async_trait::async_trait;
 use parking_lot::Mutex;
 use std::cell::RefCell;
 use std::collections::HashMap;
-
-use atproto_core::error::Result;
 
 use super::types::Handle;
 

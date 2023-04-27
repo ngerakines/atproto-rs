@@ -2,6 +2,7 @@
 //! It is used to generate the code for the protocol.
 //!
 //! Most of this code was derived from the https://github.com/bluesky-social/atproto/blob/main/packages/lexicon/src/types.ts
+use anyhow::Result;
 use async_trait::async_trait;
 use parking_lot::Mutex;
 use serde::{de, Deserialize, Serialize};
@@ -12,8 +13,6 @@ use std::fs::File;
 use std::io::BufReader;
 use std::marker::PhantomData;
 use std::path::Path;
-
-use crate::error::{AtProtoError, Result};
 
 fn string_or_seq_string<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
 where
@@ -366,7 +365,7 @@ impl LexiconDocRegistry for MemoryLexiconDocRegistry {
     }
 }
 
-pub fn lexicon_from_file<P: AsRef<Path>>(path: P) -> Result<LexiconDoc, AtProtoError> {
+pub fn lexicon_from_file<P: AsRef<Path>>(path: P) -> Result<LexiconDoc> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
     let lexicon: LexiconDoc = serde_json::from_reader(reader)?;
