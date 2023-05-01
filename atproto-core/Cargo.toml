@@ -14,7 +14,7 @@ keywords = ["atproto", "federation"]
 [dependencies]
 anyhow = { version = "1.0.66", features = ["backtrace"] }
 async-trait = {version = "0.1"}
-jsonschema = "0.16"
+jsonschema = "0.17"
 jsonwebtoken = "8"
 parking_lot = "0.12"
 serde = { version = "1", features = ["derive"] }
