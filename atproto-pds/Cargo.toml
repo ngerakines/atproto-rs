@@ -17,7 +17,7 @@ atproto-core = { path = "../atproto-core" }
 
 anyhow = { version = "1.0.70", features = ["backtrace"] }
 async-trait = {version = "0.1"}
-axum = "0.6.7"
+axum = "0.6.18"
 axum-server = {version = "0.4.7", features = ["tls-rustls"]}
 chrono = "0.4.24"
 config = "0.13.3"
