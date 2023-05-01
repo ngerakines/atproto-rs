@@ -12,7 +12,7 @@ publish = false
 keywords = ["atproto", "federation"]
 
 [dependencies]
-anyhow = { version = "1.0.66", features = ["backtrace"] }
+anyhow = { version = "1.0.71", features = ["backtrace"] }
 async-trait = {version = "0.1"}
 jsonschema = "0.16"
 jsonwebtoken = "8"
